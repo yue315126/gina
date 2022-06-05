@@ -17,6 +17,7 @@ SurfaceHolder.Callback, GestureDetector.OnGestureListener {
     var BGmoveX: Int = 0
     var fly: Fly
     var gDetector: GestureDetector
+    var mper: MediaPlayer
 
     init {
         surfaceHolder = getHolder()
@@ -24,6 +25,7 @@ SurfaceHolder.Callback, GestureDetector.OnGestureListener {
         surfaceHolder.addCallback(this)
         fly = Fly(context!!)
         gDetector = GestureDetector(context, this)
+        mper = MediaPlayer()
     }
 
     override fun surfaceCreated(p0: SurfaceHolder) {
@@ -74,8 +76,12 @@ SurfaceHolder.Callback, GestureDetector.OnGestureListener {
         return true
     }
 
-    override fun onShowPress(p0: MotionEvent?) {
-
+    override fun onShowPress(e: MotionEvent?) {
+        if (e!!.x >= 0 && e!!.x <= fly.w && e!!.y >= fly.y && e!!.y <= fly.y + fly.w) {
+            fly.fire = 1
+            mper = MediaPlayer.create(context, R.raw.shoot)
+            mper.start()
+        }
     }
 
     override fun onSingleTapUp(p0: MotionEvent?): Boolean {
@@ -83,7 +89,7 @@ SurfaceHolder.Callback, GestureDetector.OnGestureListener {
     }
 
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, p2: Float, p3: Float): Boolean {
-        fly.y = e2!!.y.toInt() - fly.h / 2
+        fly.y = e2!!.y.toInt() - fly.h/2
         return true
     }
 
